@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { 
+  Controller, Get, Post, Body, Patch, Param, Delete, Query 
+} from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
@@ -17,11 +19,6 @@ export class NotesController {
     return this.notesService.findAll();
   }
 
-  @Get('favorites')
-  findFavorites() {
-    return this.notesService.findFavorites();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.notesService.findOne(id);
@@ -35,5 +32,16 @@ export class NotesController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.notesService.remove(id);
+  }
+
+  @Get('favorites')
+  findFavorites() {
+    return this.notesService.findFavorites();
+  }
+
+  // 📨 Nueva ruta para enviar por correo
+  @Post(':id/send')
+  sendNoteByEmail(@Param('id') id: string, @Query('to') to: string) {
+    return this.notesService.sendNoteByEmail(id, to);
   }
 }

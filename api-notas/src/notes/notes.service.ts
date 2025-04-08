@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { Note } from './entities/note.entity';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
+import { MailService } from '../mail/mail.service'; 
 
 @Injectable()
 export class NotesService {
   constructor(
     @InjectRepository(Note)
     private notesRepository: Repository<Note>,
+    private readonly mailService: MailService, 
   ) {}
 
   async create(createNoteDto: CreateNoteDto): Promise<Note> {
@@ -64,10 +66,24 @@ export class NotesService {
   async findFavorites(): Promise<Note[]> {
     try {
       return await this.notesRepository.find({
-        where: { isFavorite: true },  
+        where: { isFavorite: true },
       });
     } catch (error) {
       throw new Error('Error al obtener las notas favoritas');
+    }
+  }
+
+  // 📨 Nueva función para enviar la nota por mail
+  async sendNoteByEmail(id: string, to: string): Promise<any> {
+    try {
+      const note = await this.findOne(id);
+      return this.mailService.sendNote(
+        to,
+        `Nota: ${note.title}`,
+        note.content,
+      );
+    } catch (error) {
+      throw new Error('Error al enviar la nota por correo');
     }
   }
 }
