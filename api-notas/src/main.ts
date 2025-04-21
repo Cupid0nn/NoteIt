@@ -7,14 +7,13 @@ async function bootstrap() {
 
   // Configuración de Swagger
   const config = new DocumentBuilder()
-    .setTitle('NoteIt API')
-    .setDescription('API para gestionar notas, enviarlas por correo y marcarlas como favoritas.')
-    .setVersion('1.0')
-    .addTag('notes')
-    .build();
+  .setTitle('NoteIt API')
+  .setDescription('API para gestión de notas con envío por mail')
+  .setVersion('1.0')
+  .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document); // http://localhost:3000/api
+const document = SwaggerModule.createDocument(app, config);
+SwaggerModule.setup('api', app, document);
 
   await app.listen(3000);
 }
